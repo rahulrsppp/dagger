@@ -1,5 +1,7 @@
 package com.rahul.dagger.ui.main;
 
+import com.rahul.dagger.ui.base.BaseInterface;
+
 import javax.inject.Inject;
 
 import io.reactivex.Single;

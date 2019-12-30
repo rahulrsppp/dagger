@@ -6,10 +6,11 @@ import com.rahul.dagger.ui.main.AdapterModule;
 import com.rahul.dagger.ui.main.MainActivity;
 
 import dagger.BindsInstance;
+import dagger.Component;
 import dagger.Subcomponent;
 
 @PerActivity
-@Subcomponent(modules = {ActivityContextModule.class,AdapterModule.class})
+@Component(modules = {ActivityContextModule.class/*AdapterModule.class*/})
 public interface MainActivityComponent {
 
     void inject(MainActivity mainActivity);

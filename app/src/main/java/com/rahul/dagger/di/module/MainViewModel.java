@@ -24,17 +24,19 @@ public class MainViewModel extends ViewModel {
     CompositeDisposable compositeDisposable;
     private MutableLiveData<String> outputObservable = new MutableLiveData<>();
 
+
     @Inject
     public MainViewModel(MainRepository apiInterface) {
         this.apiInterface = apiInterface;
         compositeDisposable=new CompositeDisposable();
+        executeLogin();
     }
 
     public MutableLiveData<String> getOutputObservable() {
         return outputObservable;
     }
 
-    public void executeLogin(String userName, String userPass) {
+    public void executeLogin() {
         compositeDisposable.add(apiInterface.getRepositories(URL)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread()).subscribeWith(new DisposableSingleObserver<String>() {

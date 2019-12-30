@@ -1,7 +1,9 @@
 package com.rahul.dagger.di.module;
 
 import android.arch.lifecycle.ViewModel;
+import android.arch.lifecycle.ViewModelProvider;
 
+import com.rahul.dagger.ViewModelFactory;
 import com.rahul.dagger.di.utility.ViewModelKey;
 import com.rahul.dagger.ui.main.MainActivity;
 
@@ -20,4 +22,9 @@ public abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(MainViewModel.class)
     abstract ViewModel getMainViewModel(MainViewModel mainViewModel);
+
+    @Binds
+    abstract ViewModelProvider.Factory bindViewModelFactory(ViewModelFactory factory);
+
+
 }

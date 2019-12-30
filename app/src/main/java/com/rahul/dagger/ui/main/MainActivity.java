@@ -12,6 +12,7 @@ import android.widget.Toast;
 import com.rahul.dagger.CircularInterface;
 import com.rahul.dagger.MyApplication;
 import com.rahul.dagger.R;
+import com.rahul.dagger.ViewModelFactory;
 import com.rahul.dagger.databinding.ActivityMainBinding;
 import com.rahul.dagger.di.component.ApplicationComponent;
 import com.rahul.dagger.di.component.MainActivityComponent;
@@ -44,6 +45,9 @@ public class MainActivity extends BaseActivity<ActivityMainBinding, MainViewMode
     @Inject
     public CircularInterface circularInterface;
 
+    @Inject
+    ViewModelFactory viewModelFactory;
+
     MainActivityComponent activityComponent;
 
     NewsAdapter newsAdapter;
@@ -59,7 +63,7 @@ public class MainActivity extends BaseActivity<ActivityMainBinding, MainViewMode
 
     @Override
     protected MainViewModel getViewModel() {
-        viewModel = ViewModelProviders.of(this).get(MainViewModel.class);
+        viewModel = ViewModelProviders.of(this, viewModelFactory).get(MainViewModel.class);
         return viewModel;
     }
 
