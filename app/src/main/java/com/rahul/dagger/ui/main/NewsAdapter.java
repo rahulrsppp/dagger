@@ -1,12 +1,14 @@
-package com.rahul.dagger;
+package com.rahul.dagger.ui.main;
 
-import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import com.rahul.dagger.R;
+import com.rahul.dagger.util.Listeners;
 
 import org.json.JSONObject;
 
@@ -20,10 +22,10 @@ import java.util.List;
 public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
 
     private List<String> newsData;
-    private ItemClickListener itemClickListener;
+    private Listeners.ItemClickListener itemClickListener;
 
-    public NewsAdapter(Context context) {
-        this.itemClickListener = (ItemClickListener) context;
+    public NewsAdapter(Listeners.ItemClickListener listener) {
+        this.itemClickListener = listener;
         newsData = new ArrayList<>();
     }
 
@@ -54,7 +56,7 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
             holder.tvTextView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    itemClickListener.onItemClick(newsData.get(holder.getAdapterPosition()));
+                    itemClickListener.onSelect(newsData.get(holder.getAdapterPosition()),null);
                 }
             });
         }catch(Exception e){

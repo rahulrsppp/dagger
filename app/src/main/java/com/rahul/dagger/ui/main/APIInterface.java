@@ -1,5 +1,6 @@
-package com.rahul.dagger;
+package com.rahul.dagger.ui.main;
 
+import io.reactivex.Single;
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Url;
@@ -7,5 +8,7 @@ import retrofit2.http.Url;
 public interface APIInterface {
 
     @GET
-    Call<String> getNewsData(@Url String url);
+    Single<String> getNewsData(@Url String url);
+
+
 }
