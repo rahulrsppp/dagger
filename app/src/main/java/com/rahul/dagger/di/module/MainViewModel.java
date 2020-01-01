@@ -37,6 +37,7 @@ public class MainViewModel extends ViewModel {
     }
 
     public void executeLogin() {
+
         compositeDisposable.add(apiInterface.getRepositories(URL)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread()).subscribeWith(new DisposableSingleObserver<String>() {

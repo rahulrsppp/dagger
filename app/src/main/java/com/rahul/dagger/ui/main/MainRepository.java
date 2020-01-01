@@ -1,10 +1,10 @@
 package com.rahul.dagger.ui.main;
 
-import com.rahul.dagger.ui.base.BaseInterface;
-
 import javax.inject.Inject;
 
 import io.reactivex.Single;
+import retrofit2.http.GET;
+import retrofit2.http.Url;
 
 public class MainRepository {
 
@@ -17,6 +17,12 @@ public class MainRepository {
 
     public Single<String> getRepositories(String url) {
         return repoService.getNewsData(url);
+    }
+
+
+    public interface APIInterface{
+        @GET
+        Single<String> getNewsData(@Url String url);
     }
 
 

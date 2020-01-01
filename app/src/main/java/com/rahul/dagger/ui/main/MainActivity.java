@@ -15,7 +15,6 @@ import com.rahul.dagger.R;
 import com.rahul.dagger.ViewModelFactory;
 import com.rahul.dagger.databinding.ActivityMainBinding;
 import com.rahul.dagger.di.component.ApplicationComponent;
-import com.rahul.dagger.di.component.MainActivityComponent;
 import com.rahul.dagger.di.module.ActivityContextModule;
 import com.rahul.dagger.di.module.MainViewModel;
 import com.rahul.dagger.ui.base.BaseActivity;
@@ -39,16 +38,15 @@ import retrofit2.Response;
 public class MainActivity extends BaseActivity<ActivityMainBinding, MainViewModel> implements Listeners.ItemClickListener {
 
 
-    @Inject
-    public APIInterface apiInterface;
+   /* @Inject
+    public APIInterface apiInterface;*/
 
-    @Inject
+  /*  @Inject
     public CircularInterface circularInterface;
+    */
 
     @Inject
     ViewModelFactory viewModelFactory;
-
-    MainActivityComponent activityComponent;
 
     NewsAdapter newsAdapter;
 
@@ -113,7 +111,7 @@ public class MainActivity extends BaseActivity<ActivityMainBinding, MainViewMode
         recyclerView.setAdapter(newsAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        circularInterface.getCircularData("2").enqueue(new Callback<String>() {
+       /* circularInterface.getCircularData("2").enqueue(new Callback<String>() {
             @Override
             public void onResponse(Call<String> call, Response<String> response) {
                 System.out.println(":::: Response Circular");
@@ -125,7 +123,7 @@ public class MainActivity extends BaseActivity<ActivityMainBinding, MainViewMode
                 System.out.println(":::: Response Circular: "+t.getMessage());
             }
         });
-
+*/
        /* apiInterface.getNewsData(URL).enqueue(new Callback<String>() {
             @Override
             public void onResponse(Call<String> call, Response<String> response) {
