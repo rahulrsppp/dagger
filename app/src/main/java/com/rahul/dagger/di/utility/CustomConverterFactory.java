@@ -30,6 +30,6 @@ public class CustomConverterFactory extends Converter.Factory {
                 return GsonConverterFactory.create().responseBodyConverter(type, annotations, retrofit);
             }
         }
-        return GsonConverterFactory.create(new GsonBuilder().setLenient().excludeFieldsWithoutExposeAnnotation().create()).responseBodyConverter(type, annotations, retrofit);
+        return GsonConverterFactory.create().responseBodyConverter(type, annotations, retrofit);
     }
 }

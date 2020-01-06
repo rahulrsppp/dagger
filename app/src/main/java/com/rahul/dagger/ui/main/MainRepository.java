@@ -33,7 +33,7 @@ public class MainRepository {
         @GET @Scalar
         Single<String> getNewsData(@Url String url);
 
-        @GET("/mobapps/management/LibraryService") @Gson
+        @GET("/mobapps/management/LibraryService")
         Single<Library> getLibraryBook();
     }
 
