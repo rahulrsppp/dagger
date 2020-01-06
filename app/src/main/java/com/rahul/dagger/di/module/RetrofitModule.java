@@ -1,6 +1,7 @@
 package com.rahul.dagger.di.module;
 
 import com.rahul.dagger.di.scope.AppScope;
+import com.rahul.dagger.di.utility.CustomConverterFactory;
 import com.rahul.dagger.ui.main.APIInterface;
 
 import java.io.IOException;
@@ -16,6 +17,7 @@ import okhttp3.Request;
 import okhttp3.Response;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
+import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.converter.scalars.ScalarsConverterFactory;
 
 @Module(includes = {ApiModule.class, ViewModelModule.class})
@@ -50,9 +52,9 @@ public class RetrofitModule {
 
     @Singleton
     @Provides
-    Retrofit  getRetrofitInstance(OkHttpClient okHttpClient){
+    Retrofit  getRetrofitInstance(OkHttpClient okHttpClient, CustomConverterFactory customConverterFactory){
         return new Retrofit.Builder().baseUrl("http://eduinsight.edunexttechnologies.com/").client(okHttpClient).addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-                .addConverterFactory(ScalarsConverterFactory.create()).build();
+                .addConverterFactory(customConverterFactory).build();
 
     }
 

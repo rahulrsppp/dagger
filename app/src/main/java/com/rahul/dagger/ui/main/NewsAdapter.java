@@ -1,5 +1,6 @@
 package com.rahul.dagger.ui.main;
 
+import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -22,16 +23,22 @@ import java.util.List;
 public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
 
     private List<String> newsData;
+    private List<String> libraryData;
     private Listeners.ItemClickListener itemClickListener;
 
     public NewsAdapter(Listeners.ItemClickListener listener) {
         this.itemClickListener = listener;
         newsData = new ArrayList<>();
+        libraryData = new ArrayList<>();
     }
 
 
-    public void setData(List<String> newsData){
-        this.newsData = newsData;
+    public void setData(List<String> data){
+        if(MainActivity.dataType == 0) { //Gson
+            libraryData = data;
+        }else {
+            newsData = data;
+        }
         notifyDataSetChanged();
     }
 
@@ -44,29 +51,42 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull final ViewHolder holder, int position) {
-        final String data = newsData.get(position);
 
-        try{
-            JSONObject jsonObject=new JSONObject(data);
-            if(jsonObject.has("from")){
-                String valueToSet = jsonObject.getString("from");
-                holder.tvTextView.setText("From: "+valueToSet);
-            }
+        if(MainActivity.dataType == 0) { // Gson
+            final String data = libraryData.get(position);
+            holder.tvTextView.setText(data);
 
-            holder.tvTextView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    itemClickListener.onSelect(newsData.get(holder.getAdapterPosition()),null);
+
+        }else {
+
+            final String data = newsData.get(position);
+
+            try {
+                JSONObject jsonObject = new JSONObject(data);
+                if (jsonObject.has("from")) {
+                    String valueToSet = jsonObject.getString("from");
+                    holder.tvTextView.setText("From: " + valueToSet);
                 }
-            });
-        }catch(Exception e){
-            e.printStackTrace();
-        }
 
+                holder.tvTextView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        itemClickListener.onSelect(newsData.get(holder.getAdapterPosition()), null);
+                    }
+                });
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     @Override
     public int getItemCount() {
+
+        if(MainActivity.dataType == 0){ //Gson
+            return libraryData.size();
+
+        }
         return newsData.size();
     }
 

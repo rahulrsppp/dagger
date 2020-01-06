@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
 import android.widget.Toast;
 
 import com.rahul.dagger.CircularInterface;
@@ -17,6 +18,7 @@ import com.rahul.dagger.databinding.ActivityMainBinding;
 import com.rahul.dagger.di.component.ApplicationComponent;
 import com.rahul.dagger.di.module.ActivityContextModule;
 import com.rahul.dagger.di.module.MainViewModel;
+import com.rahul.dagger.di.utility.Library;
 import com.rahul.dagger.ui.base.BaseActivity;
 import com.rahul.dagger.util.Listeners;
 
@@ -37,13 +39,9 @@ import retrofit2.Response;
 
 public class MainActivity extends BaseActivity<ActivityMainBinding, MainViewModel> implements Listeners.ItemClickListener {
 
-
-   /* @Inject
-    public APIInterface apiInterface;*/
-
-  /*  @Inject
-    public CircularInterface circularInterface;
-    */
+        // 0 - Gson
+        // 1- Scalar
+    public static int dataType = 0;
 
     @Inject
     ViewModelFactory viewModelFactory;
@@ -98,68 +96,39 @@ public class MainActivity extends BaseActivity<ActivityMainBinding, MainViewMode
             }
         });
 
+        viewModel.getGsonOutputObservable().observe(this, new Observer<Library>() {
+            @Override
+            public void onChanged(@Nullable Library s) {
+
+                if(s!=null && s.getLibrary_data()!= null){
+                    List<Library.LibraryData> libraryData =  s.getLibrary_data();
+                    List<String> data = new ArrayList<>();
+
+                    for (int i = 0; i < libraryData.size(); i++) {
+                        data.add(libraryData.get(i).getLabel());
+
+                    }
+                    newsAdapter.setData(data);
+                }
+            }
+        });
+
+        viewModel.getToastObservable().observe(this, new Observer<String>() {
+            @Override
+            public void onChanged(@Nullable String s) {
+                Toast.makeText(MainActivity.this, "GSON Data- Size is: "+s, Toast.LENGTH_SHORT).show();
+            }
+        });
+
         newsAdapter=new NewsAdapter(this);
 
         recyclerView = findViewById(R.id.recyclerView);
 
-
-       /* activityComponent = DaggerActivityComponent.builder().adapterModule(new AdapterModule(this)).applicationComponent(appComponent).build();
-
-        activityComponent.inject(this);*/
-
-
         recyclerView.setAdapter(newsAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-       /* circularInterface.getCircularData("2").enqueue(new Callback<String>() {
-            @Override
-            public void onResponse(Call<String> call, Response<String> response) {
-                System.out.println(":::: Response Circular");
-
-            }
-
-            @Override
-            public void onFailure(Call<String> call, Throwable t) {
-                System.out.println(":::: Response Circular: "+t.getMessage());
-            }
-        });
-*/
-       /* apiInterface.getNewsData(URL).enqueue(new Callback<String>() {
-            @Override
-            public void onResponse(Call<String> call, Response<String> response) {
-                String responseData = response.body();
-
-                System.out.println(":::: Response APIInterface");
-
-                if(responseData!=null){
-                    List<String> data=new ArrayList<>();
-
-                    try {
-
-                        JSONObject jsonObject=new JSONObject(responseData);
-
-                        if(jsonObject.has("comunicationdata")){
-                            JSONArray jsonArray =  jsonObject.getJSONArray("comunicationdata");
-
-                            for (int i = 0; i < jsonArray.length(); i++) {
-                                JSONObject jsonObject1 =    jsonArray.getJSONObject(i);
-                                data.add(jsonObject1.toString());
-                            }
-                        }
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-
-                    newsAdapter.setData(data);
-                }
-            }
-
-            @Override
-            public void onFailure(Call<String> call, Throwable t) {
-                System.out.println(":::: Response APIInterface: "+t.getMessage());
-            }
-        });
-*/
+        dataType = 0;
+        viewModel.executeGson();
     }
 
 
@@ -180,7 +149,15 @@ public class MainActivity extends BaseActivity<ActivityMainBinding, MainViewMode
     }
 
     @Override
-    public void onUnSelect(Object o, Object o1) {
+    public void onUnSelect(Object o, Object o1) { }
 
+    public void onScalarButtonClick(View view) {
+        dataType = 1;
+        viewModel.executeScalar();
+    }
+
+    public void onGsonButtonClick(View view) {
+        dataType = 0;
+        viewModel.executeGson();
     }
 }

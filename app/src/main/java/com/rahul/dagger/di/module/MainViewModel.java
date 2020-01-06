@@ -4,6 +4,8 @@ import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.ViewModel;
 import android.support.annotation.MainThread;
 
+import com.rahul.dagger.di.utility.Library;
+import com.rahul.dagger.di.utility.MessageResponseModel;
 import com.rahul.dagger.ui.main.APIInterface;
 import com.rahul.dagger.ui.main.MainRepository;
 
@@ -19,37 +21,73 @@ import io.reactivex.schedulers.Schedulers;
 
 public class MainViewModel extends ViewModel {
     private String URL = "http://eduinsight.edunexttechnologies.com/mobapps/management/schoolmailbox";
+    private String URL2 = "http://eduinsight.edunexttechnologies.com/mobapps/management/LibraryService";
 
-    MainRepository apiInterface;
+    MainRepository.APIInterface apiInterface;
     CompositeDisposable compositeDisposable;
-    private MutableLiveData<String> outputObservable = new MutableLiveData<>();
+    private MutableLiveData<String> scalarOutputObservable = new MutableLiveData<>();
+    private MutableLiveData<Library> gsonOutputObservable = new MutableLiveData<>();
+    private MutableLiveData<String> toastObservable = new MutableLiveData<>();
 
 
     @Inject
-    public MainViewModel(MainRepository apiInterface) {
+    public MainViewModel(MainRepository.APIInterface apiInterface) {
         this.apiInterface = apiInterface;
         compositeDisposable=new CompositeDisposable();
-        executeLogin();
+    }
+
+    public MutableLiveData<Library> getGsonOutputObservable() {
+        return gsonOutputObservable;
     }
 
     public MutableLiveData<String> getOutputObservable() {
-        return outputObservable;
+        return scalarOutputObservable;
     }
 
-    public void executeLogin() {
+    public MutableLiveData<String> getToastObservable() {
+        return toastObservable;
+    }
 
-        compositeDisposable.add(apiInterface.getRepositories(URL)
+    public void executeGson() {
+       // Gson
+        compositeDisposable.add(
+                apiInterface.getLibraryBook()
                 .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread()).subscribeWith(new DisposableSingleObserver<String>() {
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeWith(new DisposableSingleObserver<Library>() {
+                    @Override
+                    public void onSuccess(Library value) {
+
+                        if(value!=null && value.getLibrary_data()!=null){
+                             gsonOutputObservable.setValue(value);
+                        }else{
+                            toastObservable.setValue("An error occurred.");
+                        }
+                    }
+
+                    @Override
+                    public void onError(Throwable e) { }
+                }));
+
+    }
+
+    public void executeScalar() {
+        // Scalar
+        compositeDisposable.add(
+                apiInterface.getNewsData(URL)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeWith(new DisposableSingleObserver<String>() {
                     @Override
                     public void onSuccess(String value) {
-                        outputObservable.setValue(value);
+                        scalarOutputObservable.setValue(value);
                     }
 
                     @Override
                     public void onError(Throwable e) {
+                            toastObservable.setValue("An error occurred.");
+
                     }
                 }));
-
     }
 }
